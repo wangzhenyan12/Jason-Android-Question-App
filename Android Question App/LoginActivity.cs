@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using Android.App;
@@ -17,6 +18,9 @@ namespace Android_Question_App
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class LoginActivity : AppCompatActivity
     {
+        private IList<string> subredditNames = null;
+        private ListView subredditList = null;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -28,30 +32,30 @@ namespace Android_Question_App
 
             Button searchButton = FindViewById<Button>(Resource.Id.search_button);
             searchButton.Click += SearchButton_Click;
+
+            subredditList = FindViewById<ListView>(Resource.Id.subreddit__list);
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
             var json = new WebClient().DownloadString("http://www.reddit.com/subreddits/search.json?q=" + FindViewById<TextInputEditText>(Resource.Id.textInput1).Text);
             var subreddits = JsonConvert.DeserializeObject<JObject>(json);
+            subredditNames = new List<string>();
 
             foreach (var subreddit in subreddits["data"]["children"] as JArray)
             {
                 var name = subreddit["data"]["display_name_prefixed"].ToString();
-
-                var subredditList = FindViewById<LinearLayout>(Resource.Id.subreddit__list);
-                var newListItem = new TextView(this);
-                newListItem.Text = name;
-                newListItem.Click += NewListItem_Click;
-
-                subredditList.AddView(newListItem);
+                subredditNames.Add(name);
             }
+
+            var adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, subredditNames);
+            subredditList.Adapter = adapter;
+            subredditList.ItemClick += NewListItem_Click;
         }
 
-        private void NewListItem_Click(object sender, EventArgs e)
+        private void NewListItem_Click(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var listItem = (TextView)sender;
-            var subredditName = listItem.Text;
+            var subredditName = subredditNames[e.Position];
             var sidebarHtml = new WebClient().DownloadString("http://www.reddit.com/" + subredditName + "/about/sidebar");
 
             var intent = new Intent(this, typeof(SidebarActivity));
