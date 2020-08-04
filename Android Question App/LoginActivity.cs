@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Newtonsoft.Json;
@@ -18,8 +20,12 @@ namespace Android_Question_App
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class LoginActivity : AppCompatActivity
     {
+        private static readonly string TAG = typeof(LoginActivity).Name;
+
         private IList<string> subredditNames = null;
         private ListView subredditList = null;
+        private Button searchButton = null;
+        private TextInputEditText inputEditText = null;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -30,15 +36,44 @@ namespace Android_Question_App
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            Button searchButton = FindViewById<Button>(Resource.Id.search_button);
+            searchButton = FindViewById<Button>(Resource.Id.search_button);
             searchButton.Click += SearchButton_Click;
 
             subredditList = FindViewById<ListView>(Resource.Id.subreddit__list);
+            inputEditText = FindViewById<TextInputEditText>(Resource.Id.textInput1);
         }
 
-        private void SearchButton_Click(object sender, EventArgs e)
+        private void EnableSearchButton()
         {
-            var json = new WebClient().DownloadString("http://www.reddit.com/subreddits/search.json?q=" + FindViewById<TextInputEditText>(Resource.Id.textInput1).Text);
+            searchButton.Enabled = true;
+            searchButton.Text = "Search";
+        }
+
+        private void DisableSearchButton()
+        {
+            searchButton.Enabled = false;
+            searchButton.Text = "Loading ...";
+        }
+
+        private async void SearchButton_Click(object sender, EventArgs e)
+        {
+            String json = null;
+            try
+            {
+                DisableSearchButton();
+                Task<string> searchRedditTask = new HttpClient().GetStringAsync("http://www.reddit.com/subreddits/search.json?q=" + inputEditText.Text);
+                json = await searchRedditTask;
+            }
+            catch (Exception ex)
+            {
+                Toast.MakeText(this, "Network is not available!", ToastLength.Short).Show();
+                Log.Debug(TAG, ex.ToString());
+                EnableSearchButton();
+                return;
+            }
+
+            EnableSearchButton();
+
             var subreddits = JsonConvert.DeserializeObject<JObject>(json);
             subredditNames = new List<string>();
 
