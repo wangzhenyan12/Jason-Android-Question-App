@@ -91,10 +91,9 @@ namespace Android_Question_App
         private void NewListItem_Click(object sender, AdapterView.ItemClickEventArgs e)
         {
             var subredditName = subredditNames[e.Position];
-            var sidebarHtml = new WebClient().DownloadString("http://www.reddit.com/" + subredditName + "/about/sidebar");
 
             var intent = new Intent(this, typeof(SidebarActivity));
-            intent.PutExtra("sidebarHtml", sidebarHtml);
+            intent.PutExtra("subredditName", subredditName);
             this.StartActivity(intent);
         }
 
