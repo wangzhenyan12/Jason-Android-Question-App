@@ -13,6 +13,7 @@ using Android.Util;
 using Android.Views;
 using Android.Webkit;
 using Android.Widget;
+using Xamarin.Essentials;
 
 namespace Android_Question_App
 {
@@ -44,8 +45,11 @@ namespace Android_Question_App
                 return;
             }
 
+            var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            int width = (int)mainDisplayInfo.Width;
+            int height = (int)mainDisplayInfo.Height;
             var webView = new WebView(this);
-            AddContentView(webView, new ViewGroup.LayoutParams(800, 1600));
+            AddContentView(webView, new ViewGroup.LayoutParams(width / 2, height));
             webView.LoadData(sidebarHtml, "text/html", "utf-8");
         }
     }
