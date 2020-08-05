@@ -17,7 +17,7 @@ using Xamarin.Essentials;
 
 namespace Android_Question_App
 {
-    [Activity(Label = "SidebarActivity")]
+    [Activity(Label = "@string/sidebar")]
     public class SidebarActivity : AppCompatActivity
     {
         private static readonly string TAG = typeof(SidebarActivity).Name;
@@ -25,11 +25,11 @@ namespace Android_Question_App
         protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            var subredditName = Intent.Extras.GetString("subredditName");
+            var subredditName = Intent.Extras.GetString(Constants.SUBREDDIT_NAME);
             string sidebarHtml = null;
             try
             {
-                Task<string> getSidebarHtmlTask = new HttpClient().GetStringAsync("http://www.reddit.com/" + subredditName + "/about/sidebar");
+                Task<string> getSidebarHtmlTask = new HttpClient().GetStringAsync(Constants.BASE_URL + subredditName + Constants.ABOUT_SIDEBAR);
                 sidebarHtml = await getSidebarHtmlTask;
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace Android_Question_App
             int height = (int)mainDisplayInfo.Height;
             var webView = new WebView(this);
             AddContentView(webView, new ViewGroup.LayoutParams(width / 2, height));
-            webView.LoadData(sidebarHtml, "text/html", "utf-8");
+            webView.LoadData(sidebarHtml, Constants.TEXT_HTML, Constants.UTF_8);
         }
     }
 }

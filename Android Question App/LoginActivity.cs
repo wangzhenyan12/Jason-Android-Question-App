@@ -61,7 +61,8 @@ namespace Android_Question_App
             try
             {
                 DisableSearchButton();
-                Task<string> searchRedditTask = new HttpClient().GetStringAsync("http://www.reddit.com/subreddits/search.json?q=" + inputEditText.Text);
+                Task<string> searchRedditTask = new HttpClient().GetStringAsync(Constants.BASE_URL + Constants.SUBREDDITS_SEARCH
+                    + inputEditText.Text);
                 json = await searchRedditTask;
             }
             catch (Exception ex)
@@ -77,9 +78,9 @@ namespace Android_Question_App
             var subreddits = JsonConvert.DeserializeObject<JObject>(json);
             subredditNames = new List<string>();
 
-            foreach (var subreddit in subreddits["data"]["children"] as JArray)
+            foreach (var subreddit in subreddits[Constants.DATA][Constants.CHILDREN] as JArray)
             {
-                var name = subreddit["data"]["display_name_prefixed"].ToString();
+                var name = subreddit[Constants.DATA][Constants.DISPLAY_NAME_PREFIXED].ToString();
                 subredditNames.Add(name);
             }
 
@@ -93,7 +94,7 @@ namespace Android_Question_App
             var subredditName = subredditNames[e.Position];
 
             var intent = new Intent(this, typeof(SidebarActivity));
-            intent.PutExtra("subredditName", subredditName);
+            intent.PutExtra(Constants.SUBREDDIT_NAME, subredditName);
             this.StartActivity(intent);
         }
 
