@@ -34,14 +34,14 @@ namespace Android_Question_App
             }
             catch (Exception ex)
             {
-                Toast.MakeText(this, "Network is not available!", ToastLength.Short).Show();
+                Toast.MakeText(this, Resource.String.network_exception_tips, ToastLength.Short).Show();
                 Log.Debug(TAG, ex.ToString());
                 return;
             }
 
             if (null == sidebarHtml)
             {
-                Toast.MakeText(this, "Fail to Get Sidebar Content!", ToastLength.Short).Show();
+                Toast.MakeText(this, Resource.String.fail_to_get_sidebar_content, ToastLength.Short).Show();
                 return;
             }
 

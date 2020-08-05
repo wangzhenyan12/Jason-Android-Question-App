@@ -1,3 +1,8 @@
 <resources>
   <string name="app_name">Android Question App</string>
+  <string name="network_exception_tips">Network is not available!</string>
+  <string name="fail_to_get_sidebar_content">Fail to Get Sidebar Content!</string>
+  <string name="loading">Loading ...</string>
+  <string name="search">Search</string>
+  <string name="search_for_a_subreddit">Search for a subreddit</string>
 </resources>

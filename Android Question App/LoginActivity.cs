@@ -46,13 +46,13 @@ namespace Android_Question_App
         private void EnableSearchButton()
         {
             searchButton.Enabled = true;
-            searchButton.Text = "Search";
+            searchButton.Text = Resources.GetString(Resource.String.search);
         }
 
         private void DisableSearchButton()
         {
             searchButton.Enabled = false;
-            searchButton.Text = "Loading ...";
+            searchButton.Text = Resources.GetString(Resource.String.loading);
         }
 
         private async void SearchButton_Click(object sender, EventArgs e)
@@ -66,7 +66,7 @@ namespace Android_Question_App
             }
             catch (Exception ex)
             {
-                Toast.MakeText(this, "Network is not available!", ToastLength.Short).Show();
+                Toast.MakeText(this, Resource.String.network_exception_tips, ToastLength.Short).Show();
                 Log.Debug(TAG, ex.ToString());
                 EnableSearchButton();
                 return;
