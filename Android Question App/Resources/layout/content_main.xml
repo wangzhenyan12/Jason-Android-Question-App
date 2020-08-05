@@ -16,17 +16,17 @@
             android:layout_height="wrap_content"
             android:text="@string/search_for_a_subreddit"
             android:textAlignment="center"
-            android:textSize="32px"/>
+            android:textSize="32sp"/>
         <android.support.design.widget.TextInputEditText
             android:id="@+id/textInput1"
-            android:layout_width="360px"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"/>
         <Button
             android:id="@id/search_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="32px"
+            android:layout_margin="32dp"
             android:text="@string/search"/>
         
         <ListView
